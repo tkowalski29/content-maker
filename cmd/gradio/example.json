@@ -1,0 +1,13 @@
+{
+  "folder_name": "output/test1/",
+  "items":[
+    {
+      "id": "IMAGE_1",
+      "alt": "Jeździec na majestatycznym andaluzyjskim koniu galopujący po piaszczystej plaży Costa del Sol o zachodzie słońca z widokiem na Morze Śródziemne",
+      "prompt": "Photorealistic image of a rider on a magnificent white Andalusian horse galloping on a sandy beach at sunset, Mediterranean Sea with gentle waves in background, warm golden light illuminating the scene, dramatic sky with orange and pink clouds, horse's flowing mane and tail caught in motion, professional equestrian photography style, cinematic composition, 16:9 aspect ratio, high detail, no text",
+      "style": "photorealistic",
+      "aspect_ratio": "400x400",
+      "position_in_article": 705
+    }
+  ]
+}

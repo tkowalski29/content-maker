@@ -1,0 +1,157 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    name: Build and Release
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+          
+      - name: Get tag version
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        
+      - name: Build Linux amd64 binaries
+        run: |
+          for app in brief extract gradio colab; do
+            GOOS=linux GOARCH=amd64 go build -o ${app}-linux-amd64 -ldflags="-s -w" ./cmd/${app}/
+            chmod +x ${app}-linux-amd64
+          done
+
+      - name: Build Linux arm64 binaries
+        run: |
+          for app in brief extract gradio colab; do
+            GOOS=linux GOARCH=arm64 go build -o ${app}-linux-arm64 -ldflags="-s -w" ./cmd/${app}/
+            chmod +x ${app}-linux-arm64
+          done
+
+      - name: Build macOS amd64 binaries
+        run: |
+          for app in brief extract gradio colab; do
+            GOOS=darwin GOARCH=amd64 go build -o ${app}-darwin-amd64 -ldflags="-s -w" ./cmd/${app}/
+            chmod +x ${app}-darwin-amd64
+          done
+
+      - name: Build macOS arm64 binaries
+        run: |
+          for app in brief extract gradio colab; do
+            GOOS=darwin GOARCH=arm64 go build -o ${app}-darwin-arm64 -ldflags="-s -w" ./cmd/${app}/
+            chmod +x ${app}-darwin-arm64
+          done
+
+      - name: Build Windows amd64 binaries
+        run: |
+          for app in brief extract gradio colab; do
+            GOOS=windows GOARCH=amd64 go build -o ${app}-windows-amd64.exe -ldflags="-s -w" ./cmd/${app}/
+          done
+
+      - name: Create checksums
+        run: |
+          sha256sum brief-* extract-* gradio-* colab-* > checksums.txt
+          
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Release ${{ steps.get_version.outputs.VERSION }}
+          body: |
+            ## Content Maker - SEO Content Generation Tools
+
+            This release bundles four CLI utilities:
+            - **Brief** – content analysis & SEO audit tool
+            - **Extract** – markdown metadata extractor
+            - **Gradio** – batch image generator for Gradio deployments
+            - **Colab** – automation helper for Google Colab notebooks
+
+            ### Downloads
+
+            Choose the appropriate binaries for your platform:
+
+            #### Brief
+            - `brief-linux-amd64`
+            - `brief-linux-arm64`
+            - `brief-darwin-amd64`
+            - `brief-darwin-arm64`
+            - `brief-windows-amd64.exe`
+
+            #### Extract
+            - `extract-linux-amd64`
+            - `extract-linux-arm64`
+            - `extract-darwin-amd64`
+            - `extract-darwin-arm64`
+            - `extract-windows-amd64.exe`
+
+            #### Gradio
+            - `gradio-linux-amd64`
+            - `gradio-linux-arm64`
+            - `gradio-darwin-amd64`
+            - `gradio-darwin-arm64`
+            - `gradio-windows-amd64.exe`
+
+            #### Colab
+            - `colab-linux-amd64`
+            - `colab-linux-arm64`
+            - `colab-darwin-amd64`
+            - `colab-darwin-arm64`
+            - `colab-windows-amd64.exe`
+
+            ### Installation
+
+            ```bash
+            # Linux/macOS examples
+            chmod +x brief-* extract-* gradio-* colab-*
+            sudo mv brief-linux-amd64 /usr/local/bin/brief
+            sudo mv extract-linux-amd64 /usr/local/bin/extract
+            sudo mv gradio-linux-amd64 /usr/local/bin/gradio
+            sudo mv colab-linux-amd64 /usr/local/bin/colab
+
+            # Verify installation
+            brief help
+            extract help
+            gradio -h
+            colab -h
+            ```
+
+            ### Checksums
+
+            See `checksums.txt` for SHA256 verification.
+          files: |
+            brief-linux-amd64
+            brief-linux-arm64
+            brief-darwin-amd64
+            brief-darwin-arm64
+            brief-windows-amd64.exe
+            extract-linux-amd64
+            extract-linux-arm64
+            extract-darwin-amd64
+            extract-darwin-arm64
+            extract-windows-amd64.exe
+            gradio-linux-amd64
+            gradio-linux-arm64
+            gradio-darwin-amd64
+            gradio-darwin-arm64
+            gradio-windows-amd64.exe
+            colab-linux-amd64
+            colab-linux-arm64
+            colab-darwin-amd64
+            colab-darwin-arm64
+            colab-windows-amd64.exe
+            checksums.txt
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

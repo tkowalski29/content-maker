@@ -1,0 +1,84 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+.gocache/
+
+# Binary
+/brief
+/extract
+/gradio
+/colab
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+coverage.html
+coverage.txt
+
+# Dependency directories
+vendor/
+
+# Go workspace file
+go.work
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Spec output directories (keep structure, ignore outputs)
+.spec/*/output/
+.spec/*/brief/
+
+# Temporary files
+*.tmp
+*.log
+
+# Environment variables (contains API credentials)
+.env
+env.json
+chrome-user-data
+
+# Generated images
+*.png
+!.doc/**/*.png
+
+# Colab automation (Selenium)
+automation/colab/venv/
+automation/colab/colab_session.json
+automation/colab/colab_url.txt
+automation/colab/__pycache__/
+.colab_chrome_profile/
+
+# Debug
+output/
+debug/
+
+# CUSTOM
+## CC
+.claude/*
+.claude/**/*
+.gemini/*
+.gemini/**/*
+.codex/*
+.codex/**/*
+.spec/*
+
+## DOC
+.doc/.vitepress/dist/
+.doc/.vitepress/.temp/
+.doc/.vitepress/cache/
+.doc/.vitepress/config.js
+.doc/node_modules/
+.doc/temp/
